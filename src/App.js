@@ -6,7 +6,7 @@ function App() {
 
   const runABTest = async () => {
     const res = await 
-fetch("http://ab-pricing-env.eba-ceeza7uv.us-east-1.elasticbeanstalk.com/api/ab-test")
+fetch("https://ab-pricing-env.eba-ceeza7uv.us-east-1.elasticbeanstalk.com/api/optimize-price")
 ;
     const data = await res.json();
     setAbTest(data);

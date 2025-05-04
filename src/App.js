@@ -1,16 +1,42 @@
-import React, { useState } from "react";
-import "./App.css";
+import React, { useState } from 'react';
+import {
+  Container,
+  Typography,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Alert,
+  createTheme,
+  ThemeProvider
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    primary: { main: '#1976d2' },
+    secondary: { main: '#dc004e' }
+  }
+});
 
 function App() {
+  const [variant, setVariant] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const handleSelect = (v) => {
+    setVariant(v);
+    setResult(null);
+    setError(null);
+  };
+
   const handleOptimize = async () => {
+    if (!variant) return;
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/optimize-price");
+      const res = await fetch(`/api/optimize-price?variant=${variant}`);
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
@@ -24,28 +50,66 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>Pricing A/B Test & Optimizer</h1>
-      <div className="buttons">
-        <button onClick={handleOptimize} disabled={loading}>
-          {loading ? "Optimizing…" : "Run Optimization"}
-        </button>
-      </div>
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom align="center">
+          Pricing A/B Test & Optimizer
+        </Typography>
 
-      {error && <p className="error">Error: {error}</p>}
+        <Box display="flex" justifyContent="center" gap={2} mb={2}>
+          <Button
+            variant={variant === 'A' ? 'contained' : 'outlined'}
+            color="primary"
+            onClick={() => handleSelect('A')}
+          >
+            Variant A
+          </Button>
+          <Button
+            variant={variant === 'B' ? 'contained' : 'outlined'}
+            color="secondary"
+            onClick={() => handleSelect('B')}
+          >
+            Variant B
+          </Button>
+        </Box>
 
-      {result && (
-        <div className="result">
-          <h3>Optimization Results:</h3>
-          <p>
-            <strong>Best Price:</strong> ${result.best_price.toFixed(2)}
-          </p>
-          <p>
-            <strong>Expected Revenue:</strong> ${result.expected_revenue.toLocaleString()}
-          </p>
-        </div>
-      )}
-    </div>
+        <Box display="flex" justifyContent="center" mb={2}>
+          <Button
+            variant="contained"
+            disabled={!variant || loading}
+            onClick={handleOptimize}
+            size="large"
+          >
+            {loading ? <CircularProgress size={24} color="inherit" /> : 'Run Optimization'}
+          </Button>
+        </Box>
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {result && (
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Optimization Results:
+              </Typography>
+              <Typography>
+                <strong>Variant:</strong> {variant}
+              </Typography>
+              <Typography>
+                <strong>Best Price:</strong> ${result.best_price.toFixed(2)}
+              </Typography>
+              <Typography>
+                <strong>Expected Revenue:</strong> ${result.expected_revenue.toLocaleString()}
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
+      </Container>
+    </ThemeProvider>
   );
 }
 

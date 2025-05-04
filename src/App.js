@@ -2,14 +2,14 @@ import React, { useState } from "react";
 
 function App() {
   const [abResults, setAbResults] = useState(null);
-  const [optResult, setOptResult] = useState(null);
+  const [optResults, setOptResults] = useState(null);
 
   const runAbTest = async () => {
     console.log("Running A/B Test...");
     try {
       const res = await fetch("https://ab-pricing-env.eba-ceeza7uv.us-east-1.elasticbeanstalk.com/api/ab-test");
       const data = await res.json();
-      console.log("AB Test result:", data);
+      console.log("A/B Results:", data);
       setAbResults(data);
     } catch (err) {
       console.error("A/B Test failed:", err);
@@ -21,8 +21,8 @@ function App() {
     try {
       const res = await fetch("https://ab-pricing-env.eba-ceeza7uv.us-east-1.elasticbeanstalk.com/api/optimize-price");
       const data = await res.json();
-      console.log("Optimization result:", data);
-      setOptResult(data);
+      console.log("Optimization Results:", data);
+      setOptResults(data);
     } catch (err) {
       console.error("Optimization failed:", err);
     }
@@ -30,23 +30,21 @@ function App() {
 
   return (
     <div style={{ padding: "2rem" }}>
-      <h1>Pricing A/B Test & Optimizer</h1>
+      <h2>Pricing A/B Test & Optimizer</h2>
       <button onClick={runAbTest}>Run A/B Test</button>
-      <button onClick={runOptimization} style={{ marginLeft: "1rem" }}>
-        Run Optimization
-      </button>
+      <button onClick={runOptimization}>Run Optimization</button>
 
       {abResults && (
-        <div style={{ marginTop: "2rem" }}>
-          <h2>A/B Test Results</h2>
+        <div>
+          <h3>A/B Test Results:</h3>
           <pre>{JSON.stringify(abResults, null, 2)}</pre>
         </div>
       )}
 
-      {optResult && (
-        <div style={{ marginTop: "2rem" }}>
-          <h2>Optimized Price</h2>
-          <pre>{JSON.stringify(optResult, null, 2)}</pre>
+      {optResults && (
+        <div>
+          <h3>Optimization Results:</h3>
+          <pre>{JSON.stringify(optResults, null, 2)}</pre>
         </div>
       )}
     </div>

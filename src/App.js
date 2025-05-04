@@ -19,7 +19,7 @@ function App() {
   const runOptimization = async () => {
     console.log("Running Optimization...");
     try {
-      const res = await fetch("http://ab-pricing-env.eba-ceeza7uv.us-east-1.elasticbeanstalk.com/api/optimize-price");
+      const res = await fetch("/api/optimize-price");
       const data = await res.json();
       console.log("Optimization Results:", data);
       setOptResults(data);

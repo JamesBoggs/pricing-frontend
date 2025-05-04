@@ -5,10 +5,11 @@ function App() {
   const [optResult, setOptResult] = useState(null);
 
   const runAbTest = async () => {
+    console.log("Running A/B Test...");
     try {
-      const res = await 
-fetch("https://ab-pricing-env.eba-ceeza7uv.us-east-1.elasticbeanstalk.com/api/ab-test");
+      const res = await fetch("https://ab-pricing-env.eba-ceeza7uv.us-east-1.elasticbeanstalk.com/api/ab-test");
       const data = await res.json();
+      console.log("AB Test result:", data);
       setAbResults(data);
     } catch (err) {
       console.error("A/B Test failed:", err);
@@ -16,10 +17,11 @@ fetch("https://ab-pricing-env.eba-ceeza7uv.us-east-1.elasticbeanstalk.com/api/ab
   };
 
   const runOptimization = async () => {
+    console.log("Running Optimization...");
     try {
-      const res = await 
-fetch("https://ab-pricing-env.eba-ceeza7uv.us-east-1.elasticbeanstalk.com/api/optimize-price");
+      const res = await fetch("https://ab-pricing-env.eba-ceeza7uv.us-east-1.elasticbeanstalk.com/api/optimize-price");
       const data = await res.json();
+      console.log("Optimization result:", data);
       setOptResult(data);
     } catch (err) {
       console.error("Optimization failed:", err);
@@ -52,4 +54,3 @@ fetch("https://ab-pricing-env.eba-ceeza7uv.us-east-1.elasticbeanstalk.com/api/op
 }
 
 export default App;
-
